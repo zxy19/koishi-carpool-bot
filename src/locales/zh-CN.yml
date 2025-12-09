@@ -1,17 +1,30 @@
 carpool:
   car-message: |-
-    {message}
-
-    {#each member as uid}<at id={uid}/>
-    {/each}
-    
-    {desc}
-    {#each tags as tag}#{tag}{/each}
+    <p>{message}</p>
+    <p>
+      {#each member as uid}
+      <at id={uid}/>
+      {/each}
+    </p>
+    <p>{desc}</p>
+    <p>
+      {#each tags as tag}
+      #{tag}
+      {/each}
+    </p>
+    <p>
     #{id} <{game}> [{player}/{maxPlayer}]
+    </p>
   car-not-found: "车队不存在"
+  car-locked: 发车！车队已锁定
 commands:
   car:
-    wait: 
+    description: 查看当前车队信息
+    messages:
+      car-info: 当前车队信息
+      not-in-car: 你目前未加入车队
+
+    wait:
       description: 加入已有的或者创建新的车队
       usage: |-
         下面参数均可以不填写
@@ -26,9 +39,39 @@ commands:
         already-in-car: "你已经在车队中了"
         join: "成功加入了车队"
         create: "成功创建了车队"
+        no-default-game: 未指定默认游戏，请直接指定等车的游戏或者设置默认游戏
     leave:
       description: 离开当前车队
       messages:
         success: 成功离开了车队
         removed: 因为车队发起人离开，车队已解散
         not-in-car: 你目前未加入车队
+    desc:
+      description: 修改车队描述
+      messages:
+        desc-updated: 车队描述已更新
+        not-in-car: 你目前未加入车队
+        not-leader: 只有队长可以修改车队描述
+  game:
+    description: 查看本群添加的游戏
+    messages:
+      game: |-
+        默认游戏 [{defaultGame}]
+
+        {#each games as game}
+          {game.name}: 要求 {game.player} 玩家
+        {/each}
+    add:
+      description: 添加新的游戏
+      messages:
+        success: 添加成功！游戏 [{game}] 最大人数 {player}
+    remove:
+      description: 移除已经添加的游戏
+      messages:
+        success: 游戏 [{game}] 已经被从本群移除
+        not-found: 游戏 [{game}] 未找到
+    default:
+      description: 设置默认游戏
+      messages:
+        success: 游戏 [{game}] 已设置为本群默认游戏
+        not-found: 游戏 [{game}] 未找到

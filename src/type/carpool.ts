@@ -1,6 +1,6 @@
 import { Context } from "koishi"
 
-interface ChannelBased{
+interface ChannelBased {
     channel: string,
     platform: string
 }
@@ -25,7 +25,8 @@ export interface Game extends ChannelBased {
     player: number,
 }
 export interface ChannelSetting extends ChannelBased {
+    id: number,
     default_game?: number
     wait_time: number
 }
-export type FeatureRegister = (ctx: Context) => Promise<void>
+export type FeatureRegister = (ctx: Context) => Promise<void> | void

@@ -3,7 +3,7 @@ import { parse } from "../../utils/signedParameterParser";
 import { getChannelDefaultGame } from "../../data/channel";
 import { addCar, getCarPlayerCount, getCarPlayers, getCarsByChannel, getCarsByGame, getPlayerCar, joinCar } from "../../data/car";
 import { getGameById, getGameByName } from "../../data/game";
-import { JOIN_CAR } from "../../context/locks";
+import { operateCarWrapErr } from "../../context/locks";
 import { carMessage } from "../../utils/message";
 
 /**
@@ -31,17 +31,18 @@ async function process(ctx: Context, session: Session, parserArg: string) {
     return await findAndJoinOrCreate(ctx, session, game, playerNum, tags, desc);
 }
 async function findAndJoinOrCreate(ctx: Context, session: Session, gameId: number, playerNum: number, tags: string[], desc: string) {
-    await JOIN_CAR.acquire();
-    let car = await findCanJoin(ctx, session, gameId, playerNum, tags);
-    let message = session.text(".join");
-    if (car) {
-        await joinCar(ctx, session.userId, car.id, playerNum);
-    } else {
-        message = session.text(".create");
-        car = await addCar(ctx, session.channelId, session.platform, gameId, tags, desc);
-    }
-    await JOIN_CAR.release();
-    return carMessage(ctx, car, message, session);
+    const { car, message } = await operateCarWrapErr(async () => {
+        let car = await findCanJoin(ctx, session, gameId, playerNum, tags);
+        let message = session.text(".join");
+        if (car) {
+            await joinCar(ctx, session.userId, car.id, playerNum);
+        } else {
+            message = session.text(".create");
+            car = await addCar(ctx, session.channelId, session.platform, gameId, tags, desc);
+        }
+        return { car, message };
+    });
+    return await carMessage(ctx, car, message, session);
 }
 async function findCanJoin(ctx: Context, session: Session, gameId: number, playerNum: number, tags: string[]) {
     const game = await getGameById(ctx, session.channelId, session.platform, gameId);

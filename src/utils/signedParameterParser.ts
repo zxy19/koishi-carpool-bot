@@ -4,7 +4,7 @@ export function parse<K extends string | number | symbol>(cmd: string, keys: K[]
     for (const key of keys) {
         data[key] = [];
     }
-    const a = cmd.split(" ");
+    const a = (cmd||"").split(" ");
     for (let s of a) {
         if (s.length == 0) {
             if (!filterEmpty)

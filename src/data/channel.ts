@@ -2,7 +2,7 @@ import { Context } from "koishi";
 import { ChannelSetting } from "../type/carpool";
 
 export async function getChannelObject(ctx: Context, channel: string, platform: string): Promise<ChannelSetting> {
-    const t = await ctx.model.get('carpool_channel', { channel, platform })[0];
+    const t = (await ctx.model.get('carpool_channel', { channel, platform }))[0];
     if (!t) {
         await ctx.model.create('carpool_channel', { channel, platform, wait_time: 10, default_game: null });
         return await getChannelObject(ctx, channel, platform);
@@ -14,4 +14,10 @@ export async function getChannelDefaultGame(ctx: Context, channel: string, platf
 }
 export async function getChannelWaitTime(ctx: Context, channel: string, platform: string) {
     return (await getChannelObject(ctx, channel, platform)).wait_time;
+}
+export async function setChannelDefaultGame(ctx: Context, channel: string, platform: string, game: number) {
+    return await ctx.model.set("carpool_channel", { channel, platform }, { default_game: game });
+}
+export async function setChannelWaitTime(ctx: Context, channel: string, platform: string, wait_time: number) {
+    return await ctx.model.set("carpool_channel", { channel, platform }, { wait_time });
 }

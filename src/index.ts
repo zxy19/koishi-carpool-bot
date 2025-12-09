@@ -1,5 +1,6 @@
 import { Context } from 'koishi'
 import { init } from './data/database'
+import { registerAll } from './reg';
 
 export const name = 'carpool-bot'
 export const inject = {
@@ -10,5 +11,6 @@ export function apply(ctx: Context) {
   ctx.on('ready', async () => {
     await init(ctx);
   });
-  ctx.i18n.define('zh-CN', require('./locales/zh-CN'))
+  ctx.i18n.define('zh-CN', require('./locales/zh-CN'));
+  registerAll(ctx);
 }

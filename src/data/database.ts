@@ -27,8 +27,9 @@ export async function init(ctx: Context) {
         player: 'unsigned',
         channel: 'text',
         platform: 'text',
-    });
+    }, { autoInc: true });
     ctx.model.extend("carpool_channel", {
+        id: "unsigned",
         channel: "text",
         platform: "text",
         default_game: {
@@ -39,5 +40,5 @@ export async function init(ctx: Context) {
             type: "unsigned",
             initial: 10,
         },
-    })
+    }, { autoInc: true })
 }

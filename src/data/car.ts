@@ -5,7 +5,7 @@ export async function getPlayerCar(ctx: Context, userId: string): Promise<Car | 
     const um = await ctx.model.get('carpool_car_member', { user: userId });
     if (um.length == 0)
         return null;
-    return await ctx.model.get('carpool_car', { id: um[0].car })[0] || null;
+    return (await ctx.model.get('carpool_car', { id: um[0].car }))[0] || null;
 }
 export async function getCarById(ctx: Context, carId: number): Promise<Car | null> {
     return await ctx.model.get('carpool_car', { id: carId })[0] || null;
@@ -40,7 +40,7 @@ export async function joinCar(ctx: Context, user: string, car: number, count: nu
     const res = await ctx.model.set("carpool_car", { id: car }, {
         updated_at: new Date()
     });
-    if (!res.modified)
+    if (!res.matched)
         return null;
     return await ctx.model.create("carpool_car_member", {
         car, user, count
@@ -50,7 +50,7 @@ export async function leaveCar(ctx: Context, user: string, car: number) {
     const res = await ctx.model.set("carpool_car", { id: car }, {
         updated_at: new Date()
     });
-    if (!res.modified)
+    if (!res.matched)
         return null;
     return await ctx.model.remove("carpool_car_member", { user })
 }
