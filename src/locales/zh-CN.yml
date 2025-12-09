@@ -1,0 +1,33 @@
+carpool:
+  car-message: |-
+    {message}
+
+    {#each member as uid}<at id={uid}/>
+    {/each}
+    
+    {desc}
+    {#each tags as tag}#{tag}{/each}
+    #{id} <{game}> [{player}/{maxPlayer}]
+  car-not-found: "车队不存在"
+commands:
+  car:
+    wait: 
+      description: 加入已有的或者创建新的车队
+      usage: |-
+        下面参数均可以不填写
+        :表示游戏名(不填写则要求当前频道设置了默认游戏)
+        +表示你代表的玩家数量
+        #代表标签
+        其他文本会被合并到描述中
+      examples: |-
+        car.wait
+        car.wait :原神 +2 周本扫荡，速通来 #速通
+      messages:
+        already-in-car: "你已经在车队中了"
+        join: "成功加入了车队"
+        create: "成功创建了车队"
+    leave:
+      description: 离开当前车队
+      messages:
+        success: 成功离开了车队
+        not-in-car: 你目前未加入车队

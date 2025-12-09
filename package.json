@@ -15,8 +15,18 @@
     "koishi",
     "plugin"
   ],
-  "devDependencies": {},
+  "dependencies": {
+    "@koishijs/plugin-database-sqlite": "*",
+    "async-mutex": "^0.5.0"
+  },
   "peerDependencies": {
     "koishi": "^4.18.7"
+  },
+  "koishi": {
+    "service": {
+      "required": [
+        "database"
+      ]
+    }
   }
 }

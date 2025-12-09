@@ -1,11 +1,14 @@
-import { Context, Schema } from 'koishi'
+import { Context } from 'koishi'
+import { init } from './data/database'
 
 export const name = 'carpool-bot'
-
-export interface Config {}
-
-export const Config: Schema<Config> = Schema.object({})
-
+export const inject = {
+  required: ['database'],
+}
 export function apply(ctx: Context) {
-  // write your plugin here
+  // 初始化数据库表
+  ctx.on('ready', async () => {
+    await init(ctx);
+  });
+  ctx.i18n.define('zh-CN', require('./locales/zh-CN'))
 }
