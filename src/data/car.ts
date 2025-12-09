@@ -66,3 +66,23 @@ export async function removeCar(ctx: Context, car: number) {
 export async function setCarDest(ctx: Context, car: number, desc: string) {
     await ctx.model.set("carpool_car", { id: car }, { desc });
 }
+
+export async function lockCar(ctx: Context, car: number, lockAt?: Date) {
+    if (lockAt) {
+        await ctx.model.set("carpool_car", { id: car }, {
+            lock_at: lockAt,
+            locked: false
+        });
+    } else {
+        await ctx.model.set("carpool_car", { id: car }, {
+            lock_at: null,
+            locked: true
+        });
+    }
+}
+export async function unlockCar(ctx: Context, car: number) {
+    await ctx.model.set("carpool_car", { id: car }, {
+        lock_at: null,
+        locked: false
+    });
+}

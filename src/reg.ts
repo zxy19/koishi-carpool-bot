@@ -10,6 +10,8 @@ import { registerSetDefaultGame } from "./features/game/setDefaultGame";
 import { registerGame } from "./features/game/game";
 import { registerUpdateLockJob } from "./job/updateLock";
 import { registerExpireJob } from "./job/updateExpire";
+import { registerLock } from "./features/car/lock";
+import { registerUnlock } from "./features/car/unlock";
 const T: FeatureRegister[] = [
     registerCarInfo,
     registerDescCar,
@@ -19,6 +21,8 @@ const T: FeatureRegister[] = [
     registerRemoveGame,
     registerSetDefaultGame,
     registerGame,
+    registerLock,
+    registerUnlock,
 
     registerUpdateLockJob,
     registerExpireJob

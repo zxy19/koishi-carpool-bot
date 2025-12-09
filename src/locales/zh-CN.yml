@@ -52,6 +52,18 @@ commands:
         desc-updated: 车队描述已更新
         not-in-car: 你目前未加入车队
         not-leader: 只有队长可以修改车队描述
+    lock:
+      description: 锁定车队
+      messages:
+        not-in-car: 你目前未加入车队
+        invalid-unit: 单位不合法
+        success: 发车！车队已锁定
+    unlock:
+      description: 解锁车队
+      messages:
+        not-in-car: 你目前未加入车队
+        success: 车队已解锁！
+    
   game:
     description: 查看本群添加的游戏
     messages:
