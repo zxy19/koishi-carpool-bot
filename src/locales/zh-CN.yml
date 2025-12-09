@@ -30,4 +30,5 @@ commands:
       description: 离开当前车队
       messages:
         success: 成功离开了车队
+        removed: 因为车队发起人离开，车队已解散
         not-in-car: 你目前未加入车队

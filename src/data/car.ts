@@ -59,3 +59,10 @@ export async function addCar(ctx: Context, channel: string, platform: string, ga
         channel, platform, game, tags, desc, updated_at: new Date()
     })
 }
+export async function removeCar(ctx: Context, car: number) {
+    await ctx.model.remove("carpool_car_member", { car });
+    await ctx.model.remove("carpool_car", { id: car });
+}
+export async function setCarDest(ctx: Context, car: number, desc: string) {
+    await ctx.model.set("carpool_car", { id: car }, { desc });
+}
