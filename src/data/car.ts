@@ -8,7 +8,7 @@ export async function getPlayerCar(ctx: Context, userId: string): Promise<Car | 
     return (await ctx.model.get('carpool_car', { id: um[0].car }))[0] || null;
 }
 export async function getCarById(ctx: Context, carId: number): Promise<Car | null> {
-    return await ctx.model.get('carpool_car', { id: carId })[0] || null;
+    return (await ctx.model.get('carpool_car', { id: carId }))[0] || null;
 }
 export async function getCarPlayers(ctx: Context, carId: number): Promise<string[]> {
     const players = await ctx.model.get('carpool_car_member', { car: carId });
@@ -71,18 +71,21 @@ export async function lockCar(ctx: Context, car: number, lockAt?: Date) {
     if (lockAt) {
         await ctx.model.set("carpool_car", { id: car }, {
             lock_at: lockAt,
-            locked: false
+            locked: false,
+        updated_at: new Date()
         });
     } else {
         await ctx.model.set("carpool_car", { id: car }, {
             lock_at: null,
-            locked: true
+            locked: true,
+        updated_at: new Date()
         });
     }
 }
 export async function unlockCar(ctx: Context, car: number) {
     await ctx.model.set("carpool_car", { id: car }, {
         lock_at: null,
-        locked: false
+        locked: false,
+        updated_at: new Date()
     });
 }

@@ -12,6 +12,8 @@ import { registerUpdateLockJob } from "./job/updateLock";
 import { registerExpireJob } from "./job/updateExpire";
 import { registerLock } from "./features/car/lock";
 import { registerUnlock } from "./features/car/unlock";
+import { registerJoinCar } from "./features/car/join";
+import { registerChannelSetWaitTime } from "./features/channel/join";
 const T: FeatureRegister[] = [
     registerCarInfo,
     registerDescCar,
@@ -23,6 +25,8 @@ const T: FeatureRegister[] = [
     registerGame,
     registerLock,
     registerUnlock,
+    registerJoinCar,
+    registerChannelSetWaitTime,
 
     registerUpdateLockJob,
     registerExpireJob

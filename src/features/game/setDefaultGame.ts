@@ -1,6 +1,7 @@
 import { Context, Session } from "koishi";
 import { addGame, getGameByName } from "../../data/game";
 import { getChannelDefaultGame, setChannelDefaultGame } from "../../data/channel";
+import { at } from "../../utils/message";
 
 /**
  * 
@@ -14,8 +15,8 @@ async function process(ctx: Context, session: Session, _name: string) {
     const name = _name.trim();
     const game = await getGameByName(ctx, session.channelId, session.platform, name);
     if (!game) {
-        return session.text(".not-found", { game: name })
+        return at(session,".not-found", { game: name })
     }
     await setChannelDefaultGame(ctx, session.channelId, session.platform, game.id);
-    return session.text(".success", { game: game.name })
+    return at(session,".success", { game: game.name })
 }

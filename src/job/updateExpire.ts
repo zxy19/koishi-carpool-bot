@@ -9,7 +9,11 @@ export function registerExpireJob(ctx: Context) {
 }
 async function updateExpire(ctx: Context) {
     operateCarWrapErr(async () => {
-        const data = await ctx.model.get("carpool_car", { locked: false });
+        const data = await ctx.model.get("carpool_car", {
+            locked: {
+                $or: [null, false]
+            }
+        });
         const removeIds: number[] = [];
         const expireSettingCache: Record<string, number> = {};
         for (const car of data) {
@@ -19,13 +23,13 @@ async function updateExpire(ctx: Context) {
             expireSettingCache[car.platform + "|" + car.channel] = expireMin;
             const expirePredicator = new Date();
             expirePredicator.setMinutes(expirePredicator.getMinutes() - expireMin);
-            if (expirePredicator.getTime() > car.updated_at.getTime()) {
+            if (car.updated_at.getTime() < expirePredicator.getTime()) {
                 removeIds.push(car.id);
-                sendCarMessageI18N(ctx, car, "carpool.car-expired", {});
+                await sendCarMessageI18N(ctx, car, "carpool.car-expired", {});
             }
         }
         for (const id of removeIds) {
-            removeCar(ctx, id);
+            await removeCar(ctx, id);
         }
         return null;
     });

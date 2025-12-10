@@ -15,7 +15,7 @@ async function updateLock(ctx: Context) {
                 continue;
             if (car.lock_at.getTime() < now) {
                 lockIds.push(car.id);
-                sendCarMessageI18N(ctx, car, "carpool.car-locked", {});
+                await sendCarMessageI18N(ctx, car, "carpool.car-locked", {});
             }
         }
         await ctx.model.set("carpool_car", lockIds, { locked: true });

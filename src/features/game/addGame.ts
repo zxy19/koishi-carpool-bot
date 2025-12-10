@@ -1,5 +1,6 @@
 import { Context, Session } from "koishi";
-import { addGame } from "../../data/game";
+import { addGame, getGameByName } from "../../data/game";
+import { at } from "../../utils/message";
 
 /**
  * 
@@ -11,6 +12,8 @@ export function registerAddGame(ctx: Context) {
 }
 async function process(ctx: Context, session: Session, _name: string, player: number) {
     const name = _name.trim();
+    if (await getGameByName(ctx, session.channelId, session.platform, name))
+        return at(session, ".exists", { game: name })
     await addGame(ctx, session.channelId, session.platform, name, player);
-    return session.text(".success", { player, game: name })
+    return at(session,".success", { player, game: name })
 }

@@ -1,5 +1,6 @@
 import { Context, Session } from "koishi";
 import { getPlayerCar, lockCar } from "../../data/car";
+import { at, carMessage } from "../../utils/message";
 
 /**
  * 
@@ -15,16 +16,18 @@ const multipliers = {
 async function process(ctx: Context, session: Session, time: number, unit: string) {
     const car = await getPlayerCar(ctx, session.userId);
     if (!car) {
-        return session.text(".not-in-car");
+        return at(session,".not-in-car");
     }
     const multiplier = multipliers[unit || "m"];
     if (!multiplier)
-        return session.text(".invalid-uni");
+        return at(session,".invalid-uni");
     let lockAt: Date = null;
     if (time) {
         lockAt = new Date();
         lockAt.setSeconds(lockAt.getSeconds() + time * multiplier);
+        await lockCar(ctx, car.id, lockAt);
+        return carMessage(ctx, car, session.text(".delay", { delay: "" + time + at(session,".unit." + (unit || "m")) }), session, true);
     }
     await lockCar(ctx, car.id, lockAt);
-    return session.text(".success");
+    return carMessage(ctx, car, session.text(".success"), session, true);
 }

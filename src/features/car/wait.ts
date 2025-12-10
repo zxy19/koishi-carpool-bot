@@ -4,7 +4,7 @@ import { getChannelDefaultGame } from "../../data/channel";
 import { addCar, getCarPlayerCount, getCarPlayers, getCarsByChannel, getCarsByGame, getPlayerCar, joinCar } from "../../data/car";
 import { getGameById, getGameByName } from "../../data/game";
 import { operateCarWrapErr } from "../../context/locks";
-import { carMessage } from "../../utils/message";
+import { at, carMessage } from "../../utils/message";
 
 /**
  * 等车
@@ -17,13 +17,13 @@ export function registerWaitCar(ctx: Context) {
 }
 async function process(ctx: Context, session: Session, parserArg: string) {
     if (await getPlayerCar(ctx, session.userId)) {
-        return session.text(".already-in-car");
+        return at(session,".already-in-car");
     }
     const { data, rest } = parse<":" | "+" | "#">(parserArg, [":", "+", "#"])
     const gameName = (data[':'][0] || "").trim();
     let game = gameName && (await getGameByName(ctx, session.channelId, session.platform, gameName)).id;
     if (!game) game = await getChannelDefaultGame(ctx, session.channelId, session.platform);
-    if (!game) return session.text(".no-default-game");
+    if (!game) return at(session,".no-default-game");
 
     const playerNum = parseInt(data['+'][0] || "1");
     const tags = data['#'].map(t => t.trim()).filter(t => t.length > 0);
@@ -39,6 +39,7 @@ async function findAndJoinOrCreate(ctx: Context, session: Session, gameId: numbe
         } else {
             message = session.text(".create");
             car = await addCar(ctx, session.channelId, session.platform, gameId, tags, desc);
+            await joinCar(ctx, session.userId, car.id, playerNum);
         }
         return { car, message };
     });

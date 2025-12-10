@@ -4,7 +4,7 @@ import { getChannelDefaultGame } from "../../data/channel";
 import { addCar, getCarLeader, getCarPlayerCount, getCarPlayers, getCarsByChannel, getCarsByGame, getPlayerCar, joinCar, leaveCar, removeCar } from "../../data/car";
 import { getGameById, getGameByName } from "../../data/game";
 import { operateCarWrapErr } from "../../context/locks";
-import { carMessage } from "../../utils/message";
+import { at, carMessage } from "../../utils/message";
 
 /**
  * 等车
@@ -18,7 +18,7 @@ export function registerLeaveCar(ctx: Context) {
 async function process(ctx: Context, session: Session, parserArg: string) {
     const car = await getPlayerCar(ctx, session.userId);
     if (!car)
-        return session.text(".not-in-car");
+        return at(session, ".not-in-car");
     const leader = await getCarLeader(ctx, car.id);
     if (session.userId == leader) {
         const msg = await carMessage(ctx, car, session.text(".removed"), session);
@@ -26,5 +26,5 @@ async function process(ctx: Context, session: Session, parserArg: string) {
         return msg;
     }
     await leaveCar(ctx, session.userId, car.id);
-    return await carMessage(ctx, car, session.text(".susscess"), session);
+    return await carMessage(ctx, car, session.text(".success"), session, false, session.userId);
 }

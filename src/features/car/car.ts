@@ -1,6 +1,6 @@
 import { Context, Session } from "koishi";
 import { getPlayerCar } from "../../data/car";
-import { carMessage } from "../../utils/message";
+import { at, carMessage } from "../../utils/message";
 
 /**
  * 查看当前车队信息
@@ -12,9 +12,15 @@ export function registerCarInfo(ctx: Context) {
 }
 
 async function process(ctx: Context, session: Session, msg: string) {
+    if (msg && msg.trim()) {
+        const res = await session.execute(`car.${msg}`);
+        if (res && res.length) {
+            return res;
+        }
+    }
     const car = await getPlayerCar(ctx, session.userId);
     if (!car)
-        return session.text(".not-in-car");
+        return at(session, ".not-in-car");
 
     return await carMessage(ctx, car, msg || session.text(".car-info"), session);
 }
