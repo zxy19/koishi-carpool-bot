@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-carpool-bot",
-  "description": "",
-  "version": "0.0.1",
+  "description": "A plugin that helps game players to find their teams.",
+  "version": "1.0.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -13,8 +13,13 @@
   "keywords": [
     "chatbot",
     "koishi",
-    "plugin"
+    "plugin",
+    "game"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zxy19/koishi-carpool-bot.git"
+  },
   "dependencies": {
     "@koishijs/plugin-database-sqlite": "*",
     "async-mutex": "^0.5.0"
@@ -23,6 +28,10 @@
     "koishi": "^4.18.7"
   },
   "koishi": {
+    "description": {
+      "en": "A plugin that helps game players to find their teams.",
+      "zh": "一个帮助游戏玩家组队的插件"
+    },
     "service": {
       "required": [
         "database"

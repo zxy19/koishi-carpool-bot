@@ -16,7 +16,7 @@
     "types": [
       "node",
       "yml-register/types",
-      "**/*.d.ts"
+      "./src/tables.d.ts"
     ]
   },
   "include": [
